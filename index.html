@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Cry Check — Pokémon Cry Matcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">CRY<span class="brand-mark-accent">CHECK</span></span>
+    <span class="brand-sub">mezastar field scanner</span>
+  </div>
+  <div class="signal" id="signalIndicator" data-state="idle">
+    <span class="signal-dot"></span>
+    <span class="signal-label" id="signalLabel">mic idle</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ROSTER -->
+  <section class="roster-section">
+    <div class="section-head">
+      <h2>Reference roster</h2>
+      <p>Tap a card to play its cry on loop. Tap again to stop.</p>
+    </div>
+    <div class="roster-grid" id="rosterGrid"></div>
+  </section>
+
+  <!-- MAIN EVENT -->
+  <section class="capture-section">
+    <div class="section-head">
+      <h2>Scan a cry</h2>
+      <p>Hold your phone close to the machine speaker, then record. You can also upload a clip instead.</p>
+    </div>
+
+    <div class="capture-stage">
+      <div class="meter-ring-wrap">
+        <svg class="meter-ring" viewBox="0 0 220 220" aria-hidden="true">
+          <circle class="meter-ring-track" cx="110" cy="110" r="98"></circle>
+          <circle class="meter-ring-fill" id="meterRingFill" cx="110" cy="110" r="98"></circle>
+        </svg>
+        <button class="record-btn" id="recordBtn" type="button" aria-label="Start recording">
+          <svg id="recIconMic" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 0 0-7 0v5.5A3.5 3.5 0 0 0 12 15Z" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M6.5 11.5a5.5 5.5 0 0 0 11 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M12 17v3.5M9 20.5h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <svg id="recIconStop" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" hidden>
+            <rect x="7" y="7" width="10" height="10" rx="1.5" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <div class="capture-readout">
+        <span class="capture-state" id="captureState">tap to record</span>
+        <span class="capture-timer" id="captureTimer">00:00.0</span>
+      </div>
+
+      <div class="capture-actions">
+        <label class="ghost-btn upload-btn" for="fileInput">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16V4M12 4 8 8M12 4l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 16v2.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Upload a clip
+        </label>
+        <input type="file" id="fileInput" accept="audio/*" hidden>
+
+        <button class="ghost-btn" id="relistenBtn" type="button" disabled>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12a7 7 0 1 1 2.1 5.02M5 12V7m0 5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="relistenLabel">Relisten mode</span>
+        </button>
+      </div>
+      <p class="capture-hint" id="captureHint">Relisten mode plays your captured clip back on loop so you can compare it by ear against the roster above.</p>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="results-section" id="resultsSection" hidden>
+    <div class="section-head">
+      <h2>Closest matches</h2>
+      <p>Ranked by similarity. Noisy environments lower confidence — treat the top result as a strong lead, not a verdict.</p>
+    </div>
+    <div class="results-list" id="resultsList"></div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
